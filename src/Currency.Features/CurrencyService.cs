@@ -12,6 +12,20 @@ public class CurrencyService:ICurrencyService
 
     public async Task<PagedList<CurrencyData>> GetAllCurrencies(PageParameters parameters)
     {
+        var result = await MakeApiCall();
+        var currencyData = result.data;
+        var currencyList = new List<CurrencyData>();
+
+        foreach (var data in currencyData)
+        {
+            currencyList.Add(data);
+        }
+        
+        return await PagedList<CurrencyData>.ToPagedList(currencyList,parameters.PageNumber,parameters.PageSize);
+    }
+
+    public Task<Crypto.Model.Currency?> MakeApiCall()
+    {
         var URL = new UriBuilder("https://pro-api.coinmarketcap.com/v1/cryptocurrency/map");
 
         var queryString = HttpUtility.ParseQueryString(string.Empty);
@@ -24,18 +38,7 @@ public class CurrencyService:ICurrencyService
        
         var response = client.DownloadString(URL.ToString());
         var result = JsonSerializer.Deserialize<Crypto.Model.Currency>(response);
-        
-        var currencyList = new List<CurrencyData>();
-        
-        var currencyData = result.data;
-       
-        foreach (var data in currencyData)
-        {
-            currencyList.Add(data);
-        }
-        
-        var debug = currencyList;
 
-        return (await PagedList<CurrencyData>.ToPagedList(currencyList,parameters.PageNumber,parameters.PageSize));
+        return Task.FromResult(result);
     }
 }
