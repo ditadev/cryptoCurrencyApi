@@ -1,2 +1,3 @@
 # cryptoCurrencyApi
-Simple api to get the current price of a specified currency. Using CMC Api for data, and send an email notification to the user when the price alert is triggered.
+Minimalist api to get the current price of all Crypto Currency or a specified currency. Using CoinCap Api for data.
+Data is sent as email notification to the user when the price alert set by user is triggered.
